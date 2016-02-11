@@ -2525,6 +2525,8 @@ public class FormViewController : UIViewController, FormViewControllerProtocol {
             tableView?.dataSource = self
         }
         tableView?.estimatedRowHeight = BaseRow.estimatedRowHeight
+        tableView?.estimatedSectionFooterHeight = BaseRow.estimatedRowHeight
+        tableView?.estimatedSectionHeaderHeight = BaseRow.estimatedRowHeight
     }
     
     public override func viewWillAppear(animated: Bool) {
