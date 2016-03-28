@@ -348,7 +348,7 @@ public protocol FormViewControllerProtocol {
 public struct RowNavigationOptions : OptionSetType {
     
     private enum NavigationOptions : Int {
-        case Disabled = 0, Enabled = 1, StopDisabledRow = 2, SkipCanNotBecomeFirstResponderRow = 4
+        case Disabled = 0, Enabled = 1, StopDisabledRow = 2, SkipCanNotBecomeFirstResponderRow = 4, ShowToolbar = 8
     }
     public let rawValue: Int
     public  init(rawValue: Int){ self.rawValue = rawValue}
@@ -365,6 +365,8 @@ public struct RowNavigationOptions : OptionSetType {
     
     /// Break navigation when next row cannot become first responder.
     public static let SkipCanNotBecomeFirstResponderRow = RowNavigationOptions(.SkipCanNotBecomeFirstResponderRow)
+
+    public static let ShowToolbar = RowNavigationOptions(.ShowToolbar)
 }
 
 /**
@@ -531,6 +533,7 @@ public class FormViewController : UIViewController, FormViewControllerProtocol {
     public func inputAccessoryViewForRow(row: BaseRow) -> UIView? {
         let options = navigationOptions ?? Form.defaultNavigationOptions
         guard options.contains(.Enabled) else { return nil }
+        guard options.contains(.ShowToolbar) else { return nil }
         guard row.baseCell.cellCanBecomeFirstResponder() else { return nil}
         navigationAccessoryView.previousButton.enabled = nextRowForRow(row, withDirection: .Up) != nil
         navigationAccessoryView.doneButton.target = self
@@ -542,9 +545,9 @@ public class FormViewController : UIViewController, FormViewControllerProtocol {
         navigationAccessoryView.nextButton.enabled = nextRowForRow(row, withDirection: .Down) != nil
         return navigationAccessoryView
     }
-    
+
     //MARK: FormDelegate
-    
+
     public func rowValueHasBeenChanged(row: BaseRow, oldValue: Any?, newValue: Any?) {}
     
     //MARK: FormViewControllerProtocol
