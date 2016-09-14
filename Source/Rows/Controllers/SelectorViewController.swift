@@ -17,7 +17,9 @@ public class _SelectorViewController<T: Equatable, Row: SelectableRowType where 
     public var completionCallback : ((UIViewController) -> ())?
     
     public var selectableRowCellUpdate: ((cell: Row.Cell, row: Row) -> ())?
-    
+
+    public var enableDeselection = true
+
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -26,7 +28,7 @@ public class _SelectorViewController<T: Equatable, Row: SelectableRowType where 
         super.viewDidLoad()
         guard let options = row.dataProvider?.arrayData else { return }
         
-        form +++ SelectableSection<Row, Row.Value>(row.title ?? "", selectionType: .SingleSelection(enableDeselection: true)) { [weak self] section in
+        form +++ SelectableSection<Row, Row.Value>(row.title ?? "", selectionType: .SingleSelection(enableDeselection: enableDeselection)) { [weak self] section in
             if let sec = section as? SelectableSection<Row, Row.Value> {
                 sec.onSelectSelectableRow = { _, row in
                     self?.row.value = row.value
