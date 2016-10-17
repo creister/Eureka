@@ -342,7 +342,7 @@ public protocol FormViewControllerProtocol {
 public struct RowNavigationOptions: OptionSet {
 
     private enum NavigationOptions: Int {
-        case disabled = 0, enabled = 1, stopDisabledRow = 2, skipCanNotBecomeFirstResponderRow = 4
+        case disabled = 0, enabled = 1, stopDisabledRow = 2, skipCanNotBecomeFirstResponderRow = 4, disableNavigationAccessoryView = 8
     }
     public let rawValue: Int
     public  init(rawValue: Int) { self.rawValue = rawValue}
@@ -359,6 +359,10 @@ public struct RowNavigationOptions: OptionSet {
 
     /// Break navigation when next row cannot become first responder.
     public static let SkipCanNotBecomeFirstResponderRow = RowNavigationOptions(.skipCanNotBecomeFirstResponderRow)
+  
+    /// Hide Navigation Accessory View for all rows.
+    /// Still allows other navigation features such as 'Next' keyboard functionality to function.
+    public static let DisableNavigationAccessoryView = RowNavigationOptions(.disableNavigationAccessoryView)
 }
 
 /**
@@ -533,6 +537,7 @@ open class FormViewController: UIViewController, FormViewControllerProtocol, For
      */
     open func inputAccessoryView(for row: BaseRow) -> UIView? {
         let options = navigationOptions ?? Form.defaultNavigationOptions
+        if options.contains(.DisableNavigationAccessoryView) { return nil }
         guard options.contains(.Enabled) else { return nil }
         guard row.baseCell.cellCanBecomeFirstResponder() else { return nil}
         navigationAccessoryView.previousButton.isEnabled = nextRow(for: row, withDirection: .up) != nil
